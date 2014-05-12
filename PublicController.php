@@ -20,18 +20,4 @@ class PublicController extends \Ip\Controller
 
     }
 
-    public function testLogin(){
-
-//        $userList = \Plugin\User\Service::getAll();
-
-        $userOauthProvider = 'Google';
-        $userOauthUid = 12345;
-
-
-
-    }
-
-
-
-
 }

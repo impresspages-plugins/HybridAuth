@@ -45,10 +45,7 @@ class Service {
                 'oauth_provider' => $userOauthProvider,
                 'oauth_uid' => $userOauthUid)
         );
-//
-//        \Plugin\User\Service::getByUsername();
-//
-//        \Plugin\User\Service::getByEmail();
+
         return $ipUid;
     }
 

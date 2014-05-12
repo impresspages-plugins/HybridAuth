@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Marijus
- * Date: 5/12/14
- * Time: 2:18 PM
- */
-
 namespace Plugin\HybridAuth;
 
 
@@ -37,9 +30,6 @@ class Model {
         return $keys;
 
     }
-
-
-
 
     public static function authenticate($serviceName)
     {
@@ -145,10 +135,10 @@ class Model {
             // Create IP user
             try{
                 // Random user name
-                $userName = \Plugin\HybridAuth\Service::generatePassword();
+                $userName = 'ha_'.\Plugin\HybridAuth\Service::generatePassword(14, 0);
                 $password = \Plugin\HybridAuth\Service::generatePassword();
 
-                $userEmail = '';
+                $userEmail = $userName.'@example.com';
                 $ipUid = \Plugin\User\Service::add($userName, $userEmail, $password);
 
             }catch (\Exception $e){

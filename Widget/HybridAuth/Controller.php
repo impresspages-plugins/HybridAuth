@@ -23,8 +23,6 @@ class Controller extends \Ip\WidgetController
             $data['formHtml'] = '';
         }
 
-
-
         $serviceName = ipRequest()->getRequest('auth');
 
         $data['isUserConnected'] = \Plugin\HybridAuth\Model::isUserConnected($serviceName);
@@ -32,14 +30,16 @@ class Controller extends \Ip\WidgetController
         if ($serviceName){
 
            $oauthId = \Plugin\Hybridauth\Model::authenticate($serviceName);
-           $authorized = \Plugin\HybridAuth\Model::authorize($serviceName, $oauthId);
-            $data['serviceName'] = $serviceName;
+
+           if ($oauthId){
+               $authorized = \Plugin\HybridAuth\Model::authorize($serviceName, $oauthId);
+               $data['serviceName'] = $serviceName;
+           }
 
         }
 
         $requestStatus = ipRequest()->getRequest('handshake');
         if ($requestStatus ){
-
            $isConnected = \Plugin\Hybridauth\Model::isUserConnected($requestStatus);
         }
 

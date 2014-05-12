@@ -3,7 +3,7 @@
     <?php
     $imgDir = ipFileUrl('Plugin/HybridAuth/Widget/HybridAuth/assets/img/');
     if ($isUserConnected) {
-        echo '<div class="info">User is connected';
+        echo '<div class="info">User is connected via ';
         echo $serviceName;
         echo '</div>';
     }
@@ -19,10 +19,6 @@
     if ($useGithub){
         echo '<div class="_button"><a href="?auth=GitHub"><button><img src="'.$imgDir.'github.png" height="30" alt="Login via GitHub"></button></a></div>';
     }
-
-      // start a new session (required for Hybridauth)
-
-      // change the following paths if necessary
 
 
     ?>
