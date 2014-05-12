@@ -1,0 +1,45 @@
+{
+    "title": "HybridAuth",
+    "version": "1.00",
+    "name": "HybridAuth",
+    "description": "Social login using HybridAuth library. Important: install ImpressPages User plugin before using this plugin.",
+    "author": "ImpressPages",
+    "options": [
+        {
+            "label": "Google API key",
+            "name": "googleClientId",
+            "type": "text",
+            "default": ""
+        },
+        {
+            "label": "Google client secret:",
+            "name": "googleSecret",
+            "type": "text",
+            "default": ""
+        },
+        {
+            "label": "Facebook APP ID",
+            "name": "facebookApiKey",
+            "type": "text",
+            "default": ""
+        },
+        {
+            "label": "Facebook APP secret:",
+            "name": "facebookSecret",
+            "type": "text",
+            "default": ""
+        },
+        {
+            "label": "Github client secret:",
+            "name": "githubId",
+            "type": "text",
+            "default": ""
+        },
+        {
+            "label": "Github client secret:",
+            "name": "githubSecret",
+            "type": "text",
+            "default": ""
+        }
+    ]
+}
