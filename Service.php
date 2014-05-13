@@ -29,12 +29,14 @@ class Service {
     }
 
 
-    public static function createOauthUser($userOauthProvider, $userOauthUid, $ipUid){
+    public static function createOauthUser($userOauthProvider, $userOauthUid, $ipUid, $profile = null){
+
 
         $id = ipDb()->insert('hybridauth_users', array(
                 'oauth_provider' => $userOauthProvider,
                 'oauth_uid' => $userOauthUid,
-                'ip_uid' => $ipUid)
+                'ip_uid' => $ipUid,
+                'profile' => json_encode($profile))
         );
         return $id;
     }

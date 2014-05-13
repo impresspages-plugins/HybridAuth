@@ -15,6 +15,7 @@ class Worker extends \Ip\SetupWorker{
                 `oauth_provider` varchar(16) NOT NULL,
                 `oauth_uid` text NOT NULL,
                 `ip_uid` int(10) UNSIGNED NOT NULL,
+                `profile` text NOT NULL,
                 PRIMARY KEY (`id`)
             ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;";
 

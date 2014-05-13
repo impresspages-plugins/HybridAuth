@@ -9,7 +9,6 @@ class Controller extends \Ip\WidgetController
     public function generateHtml($revisionId, $widgetId, $data, $skin)
     {
 
-
         $config   = ipFile('Plugin/HybridAuth/lib/hybridauth/config.php');
         require_once( "Plugin/HybridAuth/lib/hybridauth/Hybrid/Auth.php" );
 
@@ -29,10 +28,10 @@ class Controller extends \Ip\WidgetController
 
         if ($serviceName){
 
-           $oauthId = \Plugin\Hybridauth\Model::authenticate($serviceName);
+            $service_user_profile = \Plugin\Hybridauth\Model::authenticate($serviceName);
 
-           if ($oauthId){
-               $authorized = \Plugin\HybridAuth\Model::authorize($serviceName, $oauthId);
+           if ($service_user_profile->identifier){
+               $authorized = \Plugin\HybridAuth\Model::authorize($serviceName, $service_user_profile);
                $data['serviceName'] = $serviceName;
            }
 

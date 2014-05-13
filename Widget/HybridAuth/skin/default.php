@@ -20,7 +20,6 @@
         echo '<div class="_button"><a href="?auth=GitHub"><button><img src="'.$imgDir.'github.png" height="30" alt="Login via GitHub"></button></a></div>';
     }
 
-
     ?>
 
     </div>

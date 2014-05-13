@@ -48,9 +48,6 @@ class Model {
                 $config = array(
                     "base_url" => $authUrl,
                     'providers' => array($serviceName => $serviceSettings),
-                    'debug_mode' => true,
-                    "debug_file" => "c:/wamp/www/dzebug.txt",
-
                 );
                 // create an instance for Hybridauth with the configuration file path as parameter
                 $hybridauth = new \Hybrid_Auth($config);
@@ -59,20 +56,6 @@ class Model {
 
                 // get the user profile
                 $service_user_profile = $service->getUserProfile();
-
-
-//                echo "Ohai there! U are connected with: <b>{$service->id}</b><br />";
-//                echo "As: <b>{$service_user_profile->displayName}</b><br />";
-//                echo "And your provider user identifier is: <b>{$service_user_profile->identifier}</b><br />";
-
-                // debug the user profile
-//                print_r($service_user_profile);
-
-//                 exp of using the twitter social api: Returns settings for the authenticating user.
-//                $account_settings = $service->api()->get('account/settings.json');
-
-                // print recived settings
-//                echo "Your account settings on " . $serviceName . " : " . print_r($account_settings, true);
 
 
             } catch (Exception $e) {
@@ -118,15 +101,15 @@ class Model {
 //                echo "<br /><br /><b>Original error message:</b> " . $e->getMessage();
             }
 
-            $oauthId = $service_user_profile->identifier;
-
-            return $oauthId;
+            return $service_user_profile;
         } else {
             return false;
         }
     }
 
-    public static function authorize($userOauthProvider, $userOauthUid){
+    public static function authorize($userOauthProvider, $serviceUserProfile){
+
+        $userOauthUid = $serviceUserProfile->identifier;
 
         $ipUid = \Plugin\HybridAuth\Service::userExists($userOauthProvider, $userOauthUid);
 
@@ -147,7 +130,11 @@ class Model {
                 return false;
             }
 
-            \Plugin\HybridAuth\Service::createOauthUser($userOauthProvider, $userOauthUid, $ipUid);
+            // Record user profile data on first login
+
+            $userProfile =
+
+            \Plugin\HybridAuth\Service::createOauthUser($userOauthProvider, $userOauthUid, $ipUid, $serviceUserProfile);
             $loggedInUid = \Plugin\User\Service::login($ipUid);
 
         }else{
@@ -204,8 +191,7 @@ class Model {
         $config = array(
             "base_url" => $authUrl,
             'providers' => array($serviceName => $serviceSettings),
-            "debug_mode" => false,
-            "debug_file" => "c:/wamp/www/dzebug.txt",
+            "debug_mode" => false
         );
         // create an instance for Hybridauth with the configuration file path as parameter
         $hybridauth = new \Hybrid_Auth($config);
