@@ -6,7 +6,11 @@ class Event
 {
     public static function ipBeforeController()
     {
-        ipAddJs('Widget/HybridAuth/assets/hybridauth.js');
-        ipAddCss('Widget/HybridAuth/assets/hybridauth.css');
+        ipAddJs('assets/hybridauth.js');
+        ipAddCss('assets/hybridauth.css');
+    }
+
+    public static function ipUserLogout(){
+        Model::logoutHybridAuth();
     }
 }

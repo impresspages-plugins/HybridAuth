@@ -4,44 +4,36 @@
 
 namespace Plugin\HybridAuth\Widget\HybridAuth;
 
+use Ip\Exception;
+
 class Controller extends \Ip\WidgetController
 {
     public function generateHtml($revisionId, $widgetId, $data, $skin)
     {
 
-        $config   = ipFile('Plugin/HybridAuth/lib/hybridauth/config.php');
-        require_once( "Plugin/HybridAuth/lib/hybridauth/Hybrid/Auth.php" );
+        $settings['error'] = false;
+        $settings['isUserConnected'] = false;
 
-        if (isset( $data['loginService'])){
-            $listId = $data['loginService'];
-            $form = Model::showForm($listId);
-            $formHtml = $form->render();
-            $data['formHtml'] = $formHtml;
 
+        if (isset($data['useFacebook'])){
+            $settings['useFacebook'] = $data['useFacebook'];
         }else{
-            $data['formHtml'] = '';
+            $settings['useFacebook'] = false;
         }
 
-        $serviceName = ipRequest()->getRequest('auth');
-
-        $data['isUserConnected'] = \Plugin\HybridAuth\Model::isUserConnected($serviceName);
-
-        if ($serviceName){
-
-            $service_user_profile = \Plugin\Hybridauth\Model::authenticate($serviceName);
-
-           if ($service_user_profile->identifier){
-               $authorized = \Plugin\HybridAuth\Model::authorize($serviceName, $service_user_profile);
-               $data['serviceName'] = $serviceName;
-           }
-
+        if (isset($data['useGoogle'])){
+            $settings['useGoogle'] = $data['useGoogle'];
+        }else{
+            $settings['useGoogle'] = false;
         }
 
-        $requestStatus = ipRequest()->getRequest('handshake');
-        if ($requestStatus ){
-           $isConnected = \Plugin\Hybridauth\Model::isUserConnected($requestStatus);
+        if (isset($data['useGithub'])){
+            $settings['useGithub'] = $data['useGithub'];
+        }else{
+            $settings['useGithub'] = false;
         }
 
+        $data['settings'] = $settings;
 
         return parent::generateHtml($revisionId, $widgetId, $data, $skin);
     }

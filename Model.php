@@ -2,11 +2,16 @@
 namespace Plugin\HybridAuth;
 
 
+use Aura\Router\Exception;
+
+require_once(ipFile("Plugin/HybridAuth/lib/hybridauth/Hybrid/Auth.php"));
+
 class Model {
 
-    public function __construct()
-    {
-        require_once(ipFile("Plugin/HybridAuth/lib/hybridauth/Hybrid/Auth.php"));
+
+    public static function getAllServiceNames(){
+        $serviceNames = array('Facebook', 'Google', 'GitHub');
+        return $serviceNames;
     }
 
     public static function getSettings($serviceName)
@@ -31,24 +36,69 @@ class Model {
 
     }
 
+
+    public static function processLogin($data, $serviceName = null){
+
+        $config   = ipFile('Plugin/HybridAuth/lib/hybridauth/config.php');
+        require_once( "Plugin/HybridAuth/lib/hybridauth/Hybrid/Auth.php" );
+
+
+        $data['error'] = false;
+
+
+        $data['isUserConnected'] = \Plugin\HybridAuth\Model::isUserConnected($serviceName);
+
+        if ($serviceName){
+            try{
+                $service_user_profile = \Plugin\Hybridauth\Model::authenticate($serviceName);
+            }catch(\Exception $e){
+                $data['error'] = $e;
+            }
+
+            if ($service_user_profile->identifier){
+                $authorized = \Plugin\HybridAuth\Model::authorize($serviceName, $service_user_profile);
+
+                $data['serviceName'] = $serviceName;
+            }else{
+                $data['error'] = 'Failed to authenticate with '.$serviceName;
+            }
+        }
+
+        return $data;
+    }
+
+
+    public static function isIpUserLoggedIn(){
+
+        return ipUser()->loggedIn();
+
+    }
+
+    private static function getServiceConfig($serviceName){
+
+        $serviceSettings = array(
+            "enabled" => true,
+            "keys" => self::getSettings($serviceName),
+        );
+
+        $authUrl = ipActionUrl(array('pa' => 'HybridAuth.callback'));
+
+        $config = array(
+            "base_url" => $authUrl,
+            'providers' => array($serviceName => $serviceSettings),
+        );
+
+        return $config;
+    }
+
     public static function authenticate($serviceName)
     {
 
-        if (ipRequest()->getRequest('auth')) {
+        if ($serviceName) {
 
             try {
+                $config = Model::getServiceConfig($serviceName);
 
-                $serviceSettings = array(
-                    "enabled" => true,
-                    "keys" => self::getSettings($serviceName),
-                );
-
-                $authUrl = ipActionUrl(array('pa' => 'HybridAuth.callback', 'handshake' => '1'));
-
-                $config = array(
-                    "base_url" => $authUrl,
-                    'providers' => array($serviceName => $serviceSettings),
-                );
                 // create an instance for Hybridauth with the configuration file path as parameter
                 $hybridauth = new \Hybrid_Auth($config);
 
@@ -66,7 +116,7 @@ class Model {
                         $errMsg = "Unspecified error.";
                         break;
                     case 1 :
-                        $errMsg = "Hybriauth configuration error.";
+                        $errMsg = "Hybridauth configuration error.";
                         break;
                     case 2 :
                         $errMsg = "Provider not properly configured.";
@@ -107,43 +157,76 @@ class Model {
         }
     }
 
+    /**
+     * @param $userOauthProvider
+     * @param $serviceUserProfile
+     * @return int $loggedInUid|bool Return logged in uid if authorized or false if not authorized.
+     */
     public static function authorize($userOauthProvider, $serviceUserProfile){
 
         $userOauthUid = $serviceUserProfile->identifier;
 
-        $ipUid = \Plugin\HybridAuth\Service::userExists($userOauthProvider, $userOauthUid);
+        if ($userOauthUid){
+            $ipUid = \Plugin\HybridAuth\Service::userExists($userOauthProvider, $userOauthUid);
 
-        if (!$ipUid){
+            if (!$ipUid){
 
-            // Create IP user
-            try{
-                // Random user name
-                $userName = 'ha_'.\Plugin\HybridAuth\Service::generatePassword(14, 0);
-                $password = \Plugin\HybridAuth\Service::generatePassword();
+                // Create IP user
+                try{
+                    // Random user name
+                    $userName = 'ha_'.\Plugin\HybridAuth\Service::generatePassword(14, 0);
+                    $password = \Plugin\HybridAuth\Service::generatePassword();
 
-                $userEmail = $userName.'@example.com';
-                $ipUid = \Plugin\User\Service::add($userName, $userEmail, $password);
+                    if (isset($serviceUserProfile->email) && (filter_var($serviceUserProfile->email, FILTER_VALIDATE_EMAIL))){
 
-            }catch (\Exception $e){
-                ipLog()->error('Error adding IP user via HybridAuth plugin. User: `{userName}`, e-mail: `{email}`.',
-                    array('userName' => $userName, 'exception' => $e));
-                return false;
+                        $email = $serviceUserProfile->email;
+
+                        if (!Service::emailExists($email)){
+
+                            $ipUid = \Plugin\User\Service::add($userName, $email, $password);
+
+                        }else{
+                            throw new \Ip\Exception("User with this e-mail is already registered");
+                        }
+
+
+                    }
+
+                }catch (\Exception $e){
+                    ipLog()->error('Error adding IP user via HybridAuth plugin. User: `{userName}`, e-mail: `{email}`.',
+                        array('userName' => $userName, 'exception' => $e));
+                    return false;
+                }
+
+                // Record user profile data on first login
+
+                \Plugin\HybridAuth\Service::createOauthUser($userOauthProvider, $userOauthUid, $ipUid, $serviceUserProfile);
+                $loggedInUid = \Plugin\User\Service::login($ipUid);
+
+            }else{
+
+                $loggedInUid = \Plugin\User\Service::login($ipUid);
             }
 
-            // Record user profile data on first login
-
-            $userProfile =
-
-            \Plugin\HybridAuth\Service::createOauthUser($userOauthProvider, $userOauthUid, $ipUid, $serviceUserProfile);
-            $loggedInUid = \Plugin\User\Service::login($ipUid);
+            return $loggedInUid;
 
         }else{
-
-            $loggedInUid = \Plugin\User\Service::login($ipUid);
+            return false;
         }
 
-        return $loggedInUid;
 
+    }
+
+
+    public static function logoutHybridAuth(){
+
+        $services = self::getAllServiceNames();
+
+        foreach ($services as $service){
+            $config = self::getServiceConfig('Facebook');
+            $ha = new \Hybrid_Auth($config);
+            $ha->logoutAllProviders();
+        }
     }
 
     public static function serviceSelectForm(){
@@ -159,8 +242,8 @@ class Model {
 
         $form->addField(new \Ip\Form\Field\Checkbox(
             array(
-                'name' => 'useGoogleplus',
-                'label' => 'GooglePlus',
+                'name' => 'useGoogle',
+                'label' => 'Google',
                 'checked' => 1
             )
         ));

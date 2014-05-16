@@ -51,4 +51,10 @@ class Service {
         return $ipUid;
     }
 
+    public static function emailExists($email){
+
+        $email = ipDb()->selectValue('user', 'email', array('email' => $email));
+        return $email;
+    }
+
 } 

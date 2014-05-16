@@ -43,7 +43,7 @@ var IpWidget_HybridAuth = function () {
         this.popup.modal(); // open modal popup
 
         this.popup.find('input[name=useFacebook]').prop('checked', parseInt(this.data.useFacebook));
-        this.popup.find('input[name=useGoogleplus]').prop('checked', parseInt(this.data.useGoogleplus));
+        this.popup.find('input[name=useGoogle]').prop('checked', parseInt(this.data.useGoogle));
         this.popup.find('input[name=useGithub]').prop('checked', parseInt(this.data.useGithub));
 
         this.confirmButton.off().on('click', function () {
@@ -57,11 +57,11 @@ var IpWidget_HybridAuth = function () {
         e.preventDefault();
 
         var useFacebook = this.popup.find('input[name=useFacebook]');
-        var useGoogleplus = this.popup.find('input[name=useGoogleplus]');
+        var useGoogle = this.popup.find('input[name=useGoogle]');
         var useGithub = this.popup.find('input[name=useGithub]');
         var data = {
             useFacebook: useFacebook.prop('checked') ? 1 : 0,
-            useGoogleplus: useGoogleplus.prop('checked') ? 1 : 0,
+            useGoogle: useGoogle.prop('checked') ? 1 : 0,
             useGithub: useGithub.prop('checked') ? 1 : 0
         };
 
