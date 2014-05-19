@@ -24,10 +24,10 @@ class Worker extends \Ip\SetupWorker{
 
     public function deactivate()
     {
-        $sql =
-            "DROP TABLE IF EXISTS ".ipTable('hybridauth_users');
-
-        ipDb()->execute($sql);
+//        $sql =
+//            "DROP TABLE IF EXISTS ".ipTable('hybridauth_users');
+//
+//        ipDb()->execute($sql);
     }
 
     public function remove()

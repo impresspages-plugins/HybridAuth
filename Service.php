@@ -28,10 +28,15 @@ class Service {
         return $password;
     }
 
-
-    public static function createOauthUser($userOauthProvider, $userOauthUid, $ipUid, $profile = null){
-
-
+    /**
+     * Maps OAuth user with ImpressPages user ID. Records profile data in JSON format.
+     * @param $userOauthProvider
+     * @param $userOauthUid
+     * @param $ipUid
+     * @param null $profile
+     * @return mixed
+     */
+    public static function mapOauthUser($userOauthProvider, $userOauthUid, $ipUid, $profile = null){
         $id = ipDb()->insert('hybridauth_users', array(
                 'oauth_provider' => $userOauthProvider,
                 'oauth_uid' => $userOauthUid,
@@ -40,6 +45,10 @@ class Service {
         );
         return $id;
     }
+
+    /**
+     *
+     */
 
     public static function userExists($userOauthProvider, $userOauthUid){
 

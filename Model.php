@@ -17,20 +17,7 @@ class Model {
     public static function getSettings($serviceName)
     {
 
-        switch ($serviceName) {
-            case 'Google':
-                $keys = array("id" => ipGetOption('HybridAuth.googleClientId'), "secret" => ipGetOption("HybridAuth.googleSecret"));
-                break;
-            case 'Facebook':
-                $keys = array("id" => ipGetOption('HybridAuth.facebookApiKey'), "secret" => ipGetOption("HybridAuth.facebookSecret"));
-                break;
-            case 'GitHub':
-                $keys = array("id" => ipGetOption('HybridAuth.githubId'), "secret" => ipGetOption("HybridAuth.githubSecret"));
-                break;
-            default:
-                $keys = null;
-                break;
-        }
+        $keys = array("id" => ipGetOption('HybridAuth.'.$serviceName.'Id'), "secret" => ipGetOption("HybridAuth.".$serviceName."Secret"));
 
         return $keys;
 
@@ -58,7 +45,12 @@ class Model {
             if ($service_user_profile->identifier){
                 $authorized = \Plugin\HybridAuth\Model::authorize($serviceName, $service_user_profile);
 
-                $data['serviceName'] = $serviceName;
+                if ($authorized){
+                    $data['serviceName'] = $serviceName;
+                }else{
+                    $data['error'] = 'Failed to authorize '.$serviceName;
+                }
+
             }else{
                 $data['error'] = 'Failed to authenticate with '.$serviceName;
             }
@@ -158,9 +150,10 @@ class Model {
     }
 
     /**
+     * Authorize user logged in via OAuth to login as ImpressPages user
      * @param $userOauthProvider
      * @param $serviceUserProfile
-     * @return int $loggedInUid|bool Return logged in uid if authorized or false if not authorized.
+     * @return int $loggedInUid|bool Returns logged in uid if authorized or false if not authorized.
      */
     public static function authorize($userOauthProvider, $serviceUserProfile){
 
@@ -173,6 +166,8 @@ class Model {
 
                 // Create IP user
                 try{
+
+                    // Get user name from profile
                     // Random user name
                     $userName = 'ha_'.\Plugin\HybridAuth\Service::generatePassword(14, 0);
                     $password = \Plugin\HybridAuth\Service::generatePassword();
@@ -189,7 +184,6 @@ class Model {
                             throw new \Ip\Exception("User with this e-mail is already registered");
                         }
 
-
                     }
 
                 }catch (\Exception $e){
@@ -200,8 +194,11 @@ class Model {
 
                 // Record user profile data on first login
 
-                \Plugin\HybridAuth\Service::createOauthUser($userOauthProvider, $userOauthUid, $ipUid, $serviceUserProfile);
-                $loggedInUid = \Plugin\User\Service::login($ipUid);
+                if (\Plugin\HybridAuth\Service::mapOauthUser($userOauthProvider, $userOauthUid, $ipUid, $serviceUserProfile)){
+                    $loggedInUid = \Plugin\User\Service::login($ipUid);
+                }else{
+                    return false;
+                }
 
             }else{
 
@@ -217,44 +214,38 @@ class Model {
 
     }
 
-
     public static function logoutHybridAuth(){
 
         $services = self::getAllServiceNames();
 
         foreach ($services as $service){
-            $config = self::getServiceConfig('Facebook');
+            $config = self::getServiceConfig($service);
             $ha = new \Hybrid_Auth($config);
             $ha->logoutAllProviders();
         }
     }
 
+    public static function createUserName(){
+
+    }
+
     public static function serviceSelectForm(){
         $form = new \Ip\Form();
 
-        $form->addField(new \Ip\Form\Field\Checkbox(
-            array(
-                'name' => 'useFacebook',
-                'label' => 'Facebook',
-                'checked' => 1
-            )
-        ));
 
-        $form->addField(new \Ip\Form\Field\Checkbox(
-            array(
-                'name' => 'useGoogle',
-                'label' => 'Google',
-                'checked' => 1
-            )
-        ));
+        $serviceNames = self::getAllServiceNames();
 
-        $form->addField(new \Ip\Form\Field\Checkbox(
-            array(
-                'name' => 'useGithub',
-                'label' => 'GitHub',
-                'checked' => 1
-            )
-        ));
+        foreach ($serviceNames as $serviceName){
+
+            $form->addField(new \Ip\Form\Field\Checkbox(
+                array(
+                    'name' => 'use'.ucfirst(strtolower($serviceName)),
+                    'label' => $serviceName,
+                    'checked' => 1
+                )
+            ));
+
+        }
 
         return  $form;
 

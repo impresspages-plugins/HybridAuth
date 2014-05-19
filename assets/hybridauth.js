@@ -42,9 +42,11 @@ var IpWidget_HybridAuth = function () {
         this.form = this.popup.find('.ipsModuleFormPublic');
         this.popup.modal(); // open modal popup
 
-        this.popup.find('input[name=useFacebook]').prop('checked', parseInt(this.data.useFacebook));
-        this.popup.find('input[name=useGoogle]').prop('checked', parseInt(this.data.useGoogle));
-        this.popup.find('input[name=useGithub]').prop('checked', parseInt(this.data.useGithub));
+        var use = this.data.use;
+
+        for (var k in use){
+            this.popup.find('input[name=use' + k + ']').prop('checked', parseInt(use[k]));
+        }
 
         this.confirmButton.off().on('click', function () {
             context.form.submit();
@@ -59,10 +61,15 @@ var IpWidget_HybridAuth = function () {
         var useFacebook = this.popup.find('input[name=useFacebook]');
         var useGoogle = this.popup.find('input[name=useGoogle]');
         var useGithub = this.popup.find('input[name=useGithub]');
+
+        var use = {
+            Facebook: useFacebook.prop('checked') ? 1 : 0,
+            Google: useGoogle.prop('checked') ? 1 : 0,
+            Github: useGithub.prop('checked') ? 1 : 0
+        };
+
         var data = {
-            useFacebook: useFacebook.prop('checked') ? 1 : 0,
-            useGoogle: useGoogle.prop('checked') ? 1 : 0,
-            useGithub: useGithub.prop('checked') ? 1 : 0
+            use: use
         };
 
         this.widgetObject.save(data, 1); // save and reload widget

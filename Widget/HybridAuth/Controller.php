@@ -15,22 +15,20 @@ class Controller extends \Ip\WidgetController
         $settings['isUserConnected'] = false;
 
 
-        if (isset($data['useFacebook'])){
-            $settings['useFacebook'] = $data['useFacebook'];
-        }else{
-            $settings['useFacebook'] = false;
-        }
+        $allServiceNames = \Plugin\HybridAuth\Model::getAllServiceNames();
 
-        if (isset($data['useGoogle'])){
-            $settings['useGoogle'] = $data['useGoogle'];
-        }else{
-            $settings['useGoogle'] = false;
-        }
+        $settings['allServiceNames'] = $allServiceNames;
 
-        if (isset($data['useGithub'])){
-            $settings['useGithub'] = $data['useGithub'];
-        }else{
-            $settings['useGithub'] = false;
+        foreach ($allServiceNames  as $serviceName){
+
+            $serviceVarName = ucfirst(strtolower($serviceName));
+
+            if (isset($data['use'][$serviceVarName ])){
+                $use = $data['use'][$serviceVarName ];
+            }else{
+                $use = false;
+            }
+            $settings['use'][$serviceName] = $use;
         }
 
         $data['settings'] = $settings;
