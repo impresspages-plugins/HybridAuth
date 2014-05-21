@@ -19,6 +19,12 @@ Supports login to ImpressPages via Facebook, Google and GitHub.
 3. Copy APP ID and APP secret, open ImpressPages HybridAuth plugin settings, and paste them.
 4. Click Platform button, click Website. Specify your Site URL, e.g. http://www.example.com
 
+### Setting up login via Google
+1. Login to Google developer console https://console.developers.google.com/project
+2. Click `CREATE PROJECT` button and enter your project name.
+3. Click on `APIs & auth` menu, then click `Credentials` menu.
+4. Click `Create New Client ID` button.
+5. In `Authorized Redirect URI` enter callback URL, e.g. http://www.example.com/ip4imp8/?pa=HybridAuth.callback&hauth.done=Google
 
 ## Usage
 
