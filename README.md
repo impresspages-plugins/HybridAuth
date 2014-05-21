@@ -17,7 +17,7 @@ Supports login to ImpressPages via Facebook, Google and GitHub.
 1. Login to Facebook, and open https://developers.facebook.com/apps page. 
 2. Click `Create New App` button, and go thru the wizard to create your application. 
 3. Copy APP ID and APP secret, open ImpressPages HybridAuth plugin settings, and paste them.
-4. Click 'Setttings' menu, `Add Platform` button, click `Website`. Specify your Site URL, e.g. http://www.example.com
+4. Click `Setttings` menu, `Add Platform` button, click `Website`. Specify your Site URL, e.g. http://www.example.com
 
 ### Setting up login via Google
 1. Login to Google developer console https://console.developers.google.com/project
