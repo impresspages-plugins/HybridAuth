@@ -16,7 +16,14 @@ class PublicController extends \Ip\Controller
         require_once(ipFile("Plugin/HybridAuth/lib/hybridauth/Hybrid/Auth.php" ));
         require_once(ipFile("Plugin/HybridAuth/lib/hybridauth/Hybrid/Endpoint.php" ));
 
-        \Hybrid_Endpoint::process();
+        try{
+            \Hybrid_Endpoint::process();
+        }catch (\Exception $e){
+            $data['error'] = $e;
+            $renderedHtml = ipView('view/error.php', $data)->render();
+            return $renderedHtml;
+        }
+
 
     }
 

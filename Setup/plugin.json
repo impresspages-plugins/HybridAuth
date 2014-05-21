@@ -6,13 +6,13 @@
     "author": "ImpressPages",
     "options": [
         {
-            "label": "Google API key",
+            "label": "Google Client ID",
             "name": "googleId",
             "type": "text",
             "default": ""
         },
         {
-            "label": "Google client secret:",
+            "label": "Google Client secret:",
             "name": "googleSecret",
             "type": "text",
             "default": ""
@@ -30,13 +30,13 @@
             "default": ""
         },
         {
-            "label": "Github client secret:",
+            "label": "Github Client ID:",
             "name": "githubId",
             "type": "text",
             "default": ""
         },
         {
-            "label": "Github client secret:",
+            "label": "Github Client secret:",
             "name": "githubSecret",
             "type": "text",
             "default": ""

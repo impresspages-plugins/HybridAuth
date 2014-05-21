@@ -14,22 +14,9 @@ class Controller extends \Ip\WidgetController
         $settings['error'] = false;
         $settings['isUserConnected'] = false;
 
-
         $allServiceNames = \Plugin\HybridAuth\Model::getAllServiceNames();
-
         $settings['allServiceNames'] = $allServiceNames;
-
-        foreach ($allServiceNames  as $serviceName){
-
-            $serviceVarName = ucfirst(strtolower($serviceName));
-
-            if (isset($data['use'][$serviceVarName ])){
-                $use = $data['use'][$serviceVarName ];
-            }else{
-                $use = false;
-            }
-            $settings['use'][$serviceName] = $use;
-        }
+        $settings['use'] = \Plugin\HybridAuth\Model::getActiveServices($data, $allServiceNames);
 
         $data['settings'] = $settings;
 

@@ -13,12 +13,16 @@ class SiteController
 {
     public function login($service)
     {
-        $data = Model::processLogin(
+
+        $data = Service::processLogin(
             array(), $service
         );
 
-        if (!$data['isUserConnected']){
-            $renderedHtml = ipView('view/login.php', $data)->render();
+        if ($data['error']){
+            $renderedHtml = ipView('view/error.php', $data)->render();
+            return $renderedHtml;
+        }elseif ($data['firstLogin']){
+            $renderedHtml = ipView('view/firstLogin.php', $data)->render();
             return $renderedHtml;
         }else{
             // Show the page, if already logged in
