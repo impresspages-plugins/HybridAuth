@@ -37,7 +37,7 @@ Supports login to ImpressPages via Facebook, Google and GitHub. Uses HybridAuth 
 4. Enter `Authorization callback URL`, e.g. http://www.example.com/?pa=HybridAuth.callback&hauth.done=GitHub
 5. Click `Register Application` button.
 6. Copy `Client ID` and `Client Secret` values, open ImpressPages HybridAuth plugin settings, and paste them.
-7. 
+
 ## Usage
 
 1. Log in to ImpressPages administration page and edit the page content.
