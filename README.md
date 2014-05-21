@@ -4,7 +4,7 @@ Social login for ImpressPages.
 
 ## Features
 
-Supports login to ImpressPages via Facebook, Google and GitHub.
+Supports login to ImpressPages via Facebook, Google and GitHub. Uses HybridAuth library from http://hybridauth.sourceforge.net/
 
 ## Installing
 
@@ -21,10 +21,14 @@ Supports login to ImpressPages via Facebook, Google and GitHub.
 
 ### Setting up login via Google
 1. Login to Google developer console https://console.developers.google.com/project
-2. Click `CREATE PROJECT` button and enter your project name.
-3. Click on `APIs & auth` menu, then click `Credentials` menu.
-4. Click `Create New Client ID` button.
-5. In `Authorized Redirect URI` enter callback URL, e.g. http://www.example.com/ip4imp8/?pa=HybridAuth.callback&hauth.done=Google
+2. Click `CREATE PROJECT` button. Enter your project name and click `Create` button.
+3. Click on your new project in project list.
+3. Click `APIs & auth` menu, then click `Credentials` menu.
+4. Click `CREATE NEW CLIENT ID` button.
+5. Use `Web application` type. 
+6. Type your ImpressPages website address in `AUTHORIZED JAVASCRIPT ORIGINS` field, e.g. http://www.example.com
+7. In `AUTHORIZED REDIRECT URI` field, enter callback URL, e.g. http://www.example.com/?pa=HybridAuth.callback&hauth.done=Google
+8. Copy Client id and Client secret values, open ImpressPages HybridAuth plugin settings, and paste them.
 
 ## Usage
 
