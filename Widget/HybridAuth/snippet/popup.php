@@ -9,7 +9,7 @@
 
                 <div class="modal-body">
                     <div class="_note bg-warning"><?php
-                        echo _e('To setup Facebook, Google and GitHub OAuth ID and secrect, go to Menu/Plugins/HybridAuth panel.', 'HybridAuth');
+                        echo __('To setup HybridAuth plugin, check the <code>Readme.md</code> file. To setup Facebook, Google and GitHub OAuth ID and secret, go to <code>Menu/Plugins/HybridAuth</code> panel.', 'HybridAuth', false);
                         ?></div>
                     <?php echo $form->render(); ?>
                 </div>
