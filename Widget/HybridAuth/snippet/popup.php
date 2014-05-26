@@ -1,4 +1,4 @@
-<div class="ip">
+<div class="ip ipWidget-HybridAuth">
     <div id="ipsWidgetHybridAuthPopup" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -8,6 +8,9 @@
                 </div>
 
                 <div class="modal-body">
+                    <div class="_note bg-warning"><?php
+                        echo _e('To setup Facebook, Google and GitHub OAuth ID and secrect, go to Menu/Plugins/HybridAuth panel.', 'HybridAuth');
+                        ?></div>
                     <?php echo $form->render(); ?>
                 </div>
                 <div class="modal-footer">
