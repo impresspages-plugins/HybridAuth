@@ -30,13 +30,13 @@
             "default": ""
         },
         {
-            "label": "Github Client ID:",
+            "label": "Github client secret:",
             "name": "githubId",
             "type": "text",
             "default": ""
         },
         {
-            "label": "Github Client secret:",
+            "label": "Github client secret:",
             "name": "githubSecret",
             "type": "text",
             "default": ""

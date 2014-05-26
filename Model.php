@@ -138,10 +138,16 @@ class Model {
 
         foreach ($allServiceNames  as $serviceName){
 
-            $serviceVarName = ucfirst(strtolower($serviceName));
+            $serviceVarName = self::getServiceVarName($serviceName);
 
             if (isset($widgetData['use'][$serviceVarName ])){
-                $use = $widgetData['use'][$serviceVarName ];
+                if (ipGetOption('HybridAuth.'.$serviceVarName.'Id') &&
+                    ipGetOption('HybridAuth.'.$serviceVarName.'Secret')){
+                    $use = $widgetData['use'][$serviceVarName ];
+                }else{
+                    $use = false;
+                }
+
             }else{
                 $use = false;
             }
@@ -173,7 +179,35 @@ class Model {
 
     }
 
+    public static function getIconsForUserRegForm(){
 
+        $settings['error'] = false;
+        $settings['isUserConnected'] = false;
+
+        $allServiceNames = \Plugin\HybridAuth\Model::getAllServiceNames();
+
+        // Enable all social networks
+        $data['use'] = Array();
+
+        foreach ($allServiceNames as $serviceName){
+            $serviceVarName  = self::getServiceVarName($serviceName);
+            $data['use'][$serviceVarName] = true;
+        }
+
+        $settings['allServiceNames'] = $allServiceNames;
+
+        $settings['use'] = \Plugin\HybridAuth\Model::getActiveServices($data, $allServiceNames);
+
+        $socialLinks = ipSlot('HybridAuth_login', $settings);
+
+        return $socialLinks;
+    }
+
+    private static function getServiceVarName($serviceName){
+
+        $serviceVarName = ucfirst(strtolower($serviceName));
+        return $serviceVarName;
+    }
 
     public static function isUserConnected($serviceName)
     {

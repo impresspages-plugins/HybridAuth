@@ -212,13 +212,11 @@ class Service {
 
                 $email = $serviceUserProfile->email;
 
-
                 if (!Service::emailExists($email)){
-
                     $ipUid = \Plugin\User\Service::add($userName, $email, $password);
 
                 }else{
-                    $data['error'] = 'User with this e-mail is already registered. Try login with service which uses different e-mail.';
+                    $data['error'] = 'User with this e-mail is already registered.';
                     $data['isUserConnected'] = false;
                     return $data;
 

@@ -1,4 +1,4 @@
-<div class="ipHybridauthContainer">
+<div class="ipHybridauthContainer clearfix">
     <div class="ipHybridauth">
         <?php
         $imgDir = ipFileUrl('Plugin/HybridAuth/assets/img/');
