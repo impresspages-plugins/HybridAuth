@@ -5,13 +5,18 @@ Social login for ImpressPages.
 ## Features
 
 Supports login to ImpressPages via Facebook, Google and GitHub. Uses HybridAuth library from http://hybridauth.sourceforge.net/
+Adds social login icons to user login and registration forms.
+
+## Requirements
+
+`HybridAuth` plugin requires `User` plugin installed. Download `User` plugin from https://github.com/impresspages-plugins/User.
+To see the effects of the plugin you need to drag login, registration or logout widgets to your page.
 
 ## Installing
 
 1. Upload `HybridAuth` directory to your website's `Plugin` directory.
-2. Login to the administration area.
-3. Go to `Plugins` panel, locate `HybridAuth` plugin and click `activate` button.
-4. Fill plugin configuration panel with your application OAuth IDs and secrets.
+2. Login to the administration area. Go to `Plugins` panel, locate `HybridAuth` plugin and click `activate` button.
+3. Fill plugin configuration panel with your application OAuth IDs and secrets. See instructions below on how to do this.
 
 ### Setting up login via Facebook 
 1. Login to Facebook, and open https://developers.facebook.com/apps page. 
@@ -40,7 +45,14 @@ Supports login to ImpressPages via Facebook, Google and GitHub. Uses HybridAuth 
 
 ## Usage
 
-1. Log in to ImpressPages administration page and edit the page content.
-2. Drag HybridAuth widget from ImpressPages widgets toolbar to your page.
-3. Open your page as a user (e.g. click Preview button).
+As a widget:
+1. Log in to ImpressPages administration page and edit your page content.
+2. Drag `HybridAuth` widget from ImpressPages widgets toolbar to your page content area.
+3. In the popup window, select the checkboxes to specify which icons are displayed.
+3. Open your page as a user (e.g., by clicking `Preview` button).
 4. Click on a social network icon to login to ImpressPages.
+
+As a part of user registration form
+1. Log in to ImpressPages administration page and edit the page content.
+2. Drag `User login` or `User registration` widget to the content area. As a result, social icons are displayed.
+3. Click on social icon to login.
