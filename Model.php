@@ -62,7 +62,7 @@ class Model {
                 "https://www.googleapis.com/auth/userinfo.email";
                 break;
             case 'GitHub':
-                $scope = false;
+                $scope = "user:email";
                 break;
             default:
                 $scope = false;

@@ -21,9 +21,6 @@ class SiteController
         if ($data['error']){
             $renderedHtml = ipView('view/error.php', $data)->render();
             return $renderedHtml;
-        }elseif ($data['firstLogin']){
-            $renderedHtml = ipView('view/firstLogin.php', $data)->render();
-            return $renderedHtml;
         }else{
             // Show the page, if already logged in
             return new \Ip\Response\Redirect(ipHomeUrl());

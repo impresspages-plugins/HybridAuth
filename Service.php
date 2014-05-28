@@ -73,9 +73,7 @@ class Service {
         ipFile('Plugin/HybridAuth/lib/hybridauth/config.php');
         require_once( "Plugin/HybridAuth/lib/hybridauth/Hybrid/Auth.php" );
 
-
         $data['error'] = false;
-        $data['firstLogin'] = false;
 
         $data['isUserConnected'] = \Plugin\HybridAuth\Model::isUserConnected($serviceName);
 
@@ -96,14 +94,11 @@ class Service {
                     return $authorized; // Return error
                 }else{
                     $data['serviceName'] = $serviceName;
-                    if (isset($authorized['firstLogin'])){
-                        $data['firstLogin'] = $authorized['firstLogin'];
-                    }
 
                 }
 
             }else{
-                $data['error'] = 'Failed to authenticate with '.$serviceName;
+                $data['error'] = __('Failed to authenticate with ', 'HybridAuth').$serviceName;
                 return $data;
             }
         }
@@ -120,7 +115,6 @@ class Service {
      */
     public static function authorize($userOauthProvider, $serviceUserProfile){
 
-        $data['firstLogin'] = false;
         $data['error'] = false;
 
         $userOauthUid = $serviceUserProfile->identifier;
@@ -142,10 +136,9 @@ class Service {
 
                         \Plugin\User\Service::login($ipUid);
                         $data['ipUid']= $ipUid;
-                        $data['firstLogin'] = true;
                         return $data;
                     }else{
-                        $data['error'] = 'Cannot map OAuth user to ImpressPages user.';
+                        $data['error'] = __('Cannot map OAuth user to ImpressPages user.', 'HybridAuth');
                         return $data;
                     }
 
@@ -216,19 +209,21 @@ class Service {
                     $ipUid = \Plugin\User\Service::add($userName, $email, $password);
 
                 }else{
-                    $data['error'] = 'User with this e-mail is already registered.';
+                    $data['error'] = __('User with this e-mail is already registered.', 'HybridAuth');
                     $data['isUserConnected'] = false;
                     return $data;
 
                 }
 
             }else{
-                $ipUid = \Plugin\User\Service::add($userName, '', $password);
+                $data['error'] = __('Error adding user. E-mail is not valid.', 'HybridAuth');
+                $data['isUserConnected'] = false;
+                return $data;
             }
 
         }catch (\Exception $e){
 
-            $data['error'] = 'Error adding user: '.$e->getMessage();
+            $data['error'] = __('Error adding user: ', 'HybridAuth').$e->getMessage();
             $data['isUserConnected'] = false;
             return $data;
         }
