@@ -42,6 +42,7 @@ To see the effects of the plugin you need to drag login, registration or logout 
 4. Enter `Authorization callback URL`, e.g. http://www.example.com/?pa=HybridAuth.callback&hauth.done=GitHub
 5. Click `Register Application` button.
 6. Copy `Client ID` and `Client Secret` values, open ImpressPages HybridAuth plugin settings, and paste them.
+7. To be able to login via GitHub, user must enter `Email (will be public)` field on GitHub account profile.
 
 ## Usage
 
