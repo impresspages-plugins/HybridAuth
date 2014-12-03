@@ -70,8 +70,7 @@ class Service {
 
     public static function processLogin($data, $serviceName = null){
 
-        ipFile('Plugin/HybridAuth/lib/hybridauth/config.php');
-        require_once( "Plugin/HybridAuth/lib/hybridauth/Hybrid/Auth.php" );
+        require_once( ipFile("Plugin/HybridAuth/lib/hybridauth/Hybrid/Auth.php") );
 
         $data['error'] = false;
 
@@ -231,4 +230,4 @@ class Service {
         $data['ipUid'] = $ipUid;
         return $data;
     }
-} 
+}

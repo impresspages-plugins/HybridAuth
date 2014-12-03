@@ -30,7 +30,7 @@
             "default": ""
         },
         {
-            "label": "Github client secret:",
+            "label": "Github client ID:",
             "name": "githubId",
             "type": "text",
             "default": ""

@@ -55,10 +55,11 @@ class Model {
     private static function getScope($serviceName){
         switch ($serviceName){
             case 'Facebook':
-                $scope = "email, user_about_me, user_birthday, user_hometown, user_website";
+                $scope = "email";
                 break;
             case 'Google':
-                $scope = "https://www.googleapis.com/auth/userinfo.profile ". // optional
+                $scope =
+                //"https://www.googleapis.com/auth/userinfo.profile ". // optional
                 "https://www.googleapis.com/auth/userinfo.email";
                 break;
             case 'GitHub':
@@ -228,4 +229,4 @@ class Model {
         return $isConnected;
     }
 
-} 
+}
