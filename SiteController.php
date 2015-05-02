@@ -13,17 +13,26 @@ class SiteController
 {
     public function login($service)
     {
+        if (!isset($_SESSION['User_redirectAfterLogin'])) {
+            $_SESSION['User_redirectAfterLogin'] = $_SERVER['HTTP_REFERER'];
+        }
 
         $data = Service::processLogin(
-            array(), $service
+            array(),
+            $service
         );
 
-        if ($data['error']){
+        if ($data['error']) {
             $renderedHtml = ipView('view/error.php', $data)->render();
             return $renderedHtml;
-        }else{
+        } else {
+            $redirect = ipHomeUrl();
+            if (isset($_SESSION['User_redirectAfterLogin'])) {
+                $redirect = $_SESSION['User_redirectAfterLogin'];
+                unset($_SESSION['User_redirectAfterLogin']);
+            }
             // Show the page, if already logged in
-            return new \Ip\Response\Redirect(ipHomeUrl());
+            return new \Ip\Response\Redirect($redirect);
         }
     }
-} 
+}

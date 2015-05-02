@@ -1,10 +1,17 @@
 {
     "title": "HybridAuth",
-    "version": "1.01",
+    "version": "1.10",
     "name": "HybridAuth",
     "description": "Social login using HybridAuth library. Important: install ImpressPages User plugin before using this plugin.",
     "author": "ImpressPages",
     "options": [
+        {
+            "label": "Merge accounts",
+            "name": "mergeAccounts",
+            "type": "checkbox",
+            "default": false,
+            "note": "If checked, plugin will merge authenticated user with the same email to existing ImpressPages user. Otherwise, error will be thrown that user with such email already exists."
+        },
         {
             "label": "Google Client ID",
             "name": "googleId",

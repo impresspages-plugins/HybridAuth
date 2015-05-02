@@ -9,8 +9,6 @@
 namespace Plugin\HybridAuth;
 
 
-use Plugin\User\Model;
-
 class Service {
 
     /**
@@ -62,10 +60,31 @@ class Service {
         return $ipUid;
     }
 
+    /**
+     * Returns associative array of profile data that user gave permission to access during authentication
+     *
+     * @param null $ip_uid
+     * @return array
+     */
+    public static function getUserProfile($ip_uid = null)
+    {
+        if ($ip_uid === null) {
+            $ip_uid = ipUser()->userId();
+        }
+        $results = ipDb()->selectAll('hybridauth_users', array('oauth_provider', 'profile'), array('ip_uid' => $ip_uid));
+
+        $data = array();
+        foreach ($results as $r) {
+            $data[$r['oauth_provider']] = json_decode($r['profile'], true);
+        }
+
+        return $data;
+    }
+
     public static function emailExists($email){
 
-        $email = ipDb()->selectValue('user', 'email', array('email' => $email));
-        return $email;
+        $user = ipDb()->selectRow('user', array('id', 'email'), array('email' => $email));
+        return $user;
     }
 
     public static function processLogin($data, $serviceName = null){
@@ -170,10 +189,10 @@ class Service {
                 $service_user_profile = $service->getUserProfile();
 
             } catch (Exception $e) {
-                // Display the recived error,
+                // Display the received error,
                 // to know more please refer to Exceptions handling section on the userguide
 
-                $errMsg = Model::getAuthErrorMessage($e);
+                $errMsg = \Plugin\HybridAuth\Model::getAuthErrorMessage($e);
 
                 if (($e->getCode()==6) && ($e->getCode()==7)){
                     $service->logout();
@@ -204,24 +223,28 @@ class Service {
 
                 $email = $serviceUserProfile->email;
 
-                if (!Service::emailExists($email)){
+                $user = Service::emailExists($email);
+
+                // if user with such email doesn't exist, we'll create one
+                if (!$user) {
                     $ipUid = \Plugin\User\Service::add($userName, $email, $password);
-
-                }else{
-                    $data['error'] = __('User with this e-mail is already registered.', 'HybridAuth');
-                    $data['isUserConnected'] = false;
-                    return $data;
-
+                } else {
+                    if (ipGetOption('HybridAuth.mergeAccounts')) {
+                        $ipUid = $user['id'];
+                    } else {
+                        $data['error'] = __('User with this e-mail is already registered.', 'HybridAuth');
+                        $data['isUserConnected'] = false;
+                        return $data;
+                    }
                 }
 
-            }else{
+            } else {
                 $data['error'] = __('Error adding user. E-mail is not valid.', 'HybridAuth');
                 $data['isUserConnected'] = false;
                 return $data;
             }
 
-        }catch (\Exception $e){
-
+        } catch (\Exception $e){
             $data['error'] = __('Error adding user: ', 'HybridAuth').$e->getMessage();
             $data['isUserConnected'] = false;
             return $data;
