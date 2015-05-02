@@ -36,13 +36,19 @@ class Service {
      * @param null $profile
      * @return mixed
      */
-    public static function mapOauthUser($userOauthProvider, $userOauthUid, $ipUid, $profile = null){
-        $id = ipDb()->insert('hybridauth_users', array(
-                'oauth_provider' => $userOauthProvider,
-                'oauth_uid' => $userOauthUid,
-                'ip_uid' => $ipUid,
-                'profile' => json_encode($profile))
+    public static function mapOauthUser($userOauthProvider, $userOauthUid, $ipUid, $profile = null)
+    {
+        $data = array(
+            'oauth_provider' => $userOauthProvider,
+            'oauth_uid' => $userOauthUid,
+            'ip_uid' => $ipUid,
+            'profile' => json_encode($profile)
         );
+        $id = ipDb()->insert('hybridauth_users', $data);
+
+        $data['hybridauth_id'] = $id;
+        ipEvent('HybridAuth_mapped', $data);
+
         return $id;
     }
 

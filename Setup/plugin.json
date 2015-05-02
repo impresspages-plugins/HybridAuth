@@ -1,6 +1,6 @@
 {
     "title": "HybridAuth",
-    "version": "1.10",
+    "version": "1.11",
     "name": "HybridAuth",
     "description": "Social login using HybridAuth library. Important: install ImpressPages User plugin before using this plugin.",
     "author": "ImpressPages",
